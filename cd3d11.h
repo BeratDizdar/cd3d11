@@ -9,6 +9,19 @@
 
 #define STACK_MEMORY_MAX 64
 
+typedef enum {
+    REG_B = 1 << 1,
+    REG_T = 1 << 2,
+    REG_S = 1 << 3,
+    REG_U = 1 << 4,
+} shader_reg_t;
+
+typedef enum {
+    STAGE_VERTEX  = 1 << 1,
+    STAGE_PIXEL   = 1 << 2,
+    STAGE_COMPUTE = 1 << 3,
+} shader_stage_t;
+
 typedef struct _cd3d11 {
     IDXGISwapChain         *swapchain;
     ID3D11Device           *device;
@@ -43,12 +56,15 @@ void *cd3d11_new_buffer_managed(cd3d11 *d3d, void *data, int size, int stride, i
 void *cd3d11_new_sampler_managed(cd3d11 *d3d, int is_linear);                                           // *_objlife.c
 void *cd3d11_new_tex2d_managed(cd3d11 *d3d, const void *data, int w, int h, int pitch, int is_mut);     // *_objlife.c
 
-void *cd3d11_get_view_from_buffer_managed(cd3d11 *d3d, void *buffer, int element_count, int is_raw); // *_view.c
+void *cd3d11_get_srv_from_buffer_managed(cd3d11 *d3d, void *buffer, int element_count, int is_raw); // *_view.c
 
-void cd3d11_bind_resource_view(cd3d11 *d3d, void *view, int slot, int bind_vs, int bind_ps); // *_bind.c
-void cd3d11_bind_cbuffer(cd3d11 *d3d, void *cbuffer, int slot, int bind_vs, int bind_ps);    // *_bind.c
-void cd3d11_bind_vertex_shader(cd3d11 *d3d, void *shader);                                   // *_bind.c
-void cd3d11_bind_pixel_shader(cd3d11 *d3d, void *shader);                                    // *_bind.c
+void cd3d11_bind_srv(cd3d11 *d3d, void *view, int slot, int bind_vs, int bind_ps);         // *_bind.c
+void cd3d11_bind_cbuffer(cd3d11 *d3d, void *cbuffer, int slot, int bind_vs, int bind_ps);  // *_bind.c
+void cd3d11_bind_vertex_shader(cd3d11 *d3d, void *shader);                                 // *_bind.c
+void cd3d11_bind_pixel_shader(cd3d11 *d3d, void *shader);                                  // *_bind.c
+void cd3d11_bind_sampler(cd3d11 *d3d, void *sampler, int slot, int bind_vs, int bind_ps);  // *_bind.c
+void cd3d11_shader(cd3d11 *d3d, void *shader, shader_stage_t stage);                       // *_bind.c
+void cd3d11_reg(cd3d11 *d3d, void *ptr, shader_reg_t reg, int slot, shader_stage_t stage); // *_bind.c
 
 void cd3d11_mark_time(cd3d11 *d3d);                             // *_time.c
 unsigned long long cd3d11_wait_and_get_time_value(cd3d11 *d3d); // *_time.c
