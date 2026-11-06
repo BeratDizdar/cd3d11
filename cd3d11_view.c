@@ -1,6 +1,6 @@
 #include "cd3d11_internal.h"
 
-void *cd3d11_get_view_from_buffer_managed(cd3d11 *d3d, void *buffer, int element_count, int is_raw) {
+void *cd3d11_get_srv_from_buffer_m(cd3d11 *d3d, void *buffer, int element_count, int is_raw) {
     D3D11_SHADER_RESOURCE_VIEW_DESC sd = {0};
     sd.Format                = (is_raw) ? DXGI_FORMAT_R32_TYPELESS : DXGI_FORMAT_UNKNOWN;
     sd.ViewDimension         = D3D11_SRV_DIMENSION_BUFFEREX;
