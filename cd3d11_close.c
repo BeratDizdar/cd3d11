@@ -1,4 +1,5 @@
 #include "cd3d11_internal.h"
+#include <libloaderapi.h>
 
 void cd3d11_close(cd3d11 *d3d) {
     for (int i = 0; i < STACK_MEMORY_MAX; i++) {
@@ -10,4 +11,5 @@ void cd3d11_close(cd3d11 *d3d) {
     cd3d11__safe_release_obj(d3d->context);
     cd3d11__safe_release_obj(d3d->device);
     cd3d11__safe_release_obj(d3d->swapchain);
+    FreeLibrary(d3d->lib);
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include <initguid.h>
 #include <d3d11.h>
 
 /* UNUTMA:
@@ -23,6 +24,7 @@ typedef enum {
 } shader_stage_t;
 
 typedef struct _cd3d11 {
+    void                   *lib;
     IDXGISwapChain         *swapchain;
     ID3D11Device           *device;
     ID3D11DeviceContext    *context;
@@ -40,7 +42,7 @@ typedef struct _cd3d11 {
     } stack;
 } cd3d11;
 
-void cd3d11_open(void *hwnd, int w, int h, cd3d11 *d3d);            // *_open.c
+int cd3d11_open(void *hwnd, int w, int h, cd3d11 *d3d);             // *_open.c
 void cd3d11_close(cd3d11 *d3d);                                     // *_close.c
 void cd3d11_viewport(cd3d11 *d3d, int w, int h);                    // *_rs.c
 void cd3d11_topology(cd3d11 *d3d, D3D_PRIMITIVE_TOPOLOGY topology); // *_ia.c
