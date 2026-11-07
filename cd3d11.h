@@ -6,6 +6,7 @@
 - Texture için de view (büyük ihtimaller d3d türlerini kullanacaksın)
 - sampler binding
 - blending zartu zurt
+- dinamik r/w işi
 */
 
 #define STACK_MEMORY_MAX 64
@@ -36,7 +37,7 @@ typedef struct _cd3d11 {
     struct _managed_memory {
         struct {
             void *ptr;
-            int is_mutable;
+            int is_mutable; // bunu kullanmayı unutma
         } cell[STACK_MEMORY_MAX];
         int top;
         int active; // bunu kullanmayı unutma
