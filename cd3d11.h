@@ -33,24 +33,35 @@ typedef struct _cd3d11 {
         ID3D11Query *time0;
         ID3D11Query *time1;
     } debug;
-    struct {
+    struct _managed_memory {
         struct {
             void *ptr;
             int is_mutable;
         } cell[STACK_MEMORY_MAX];
         int top;
+        int active; // bunu kullanmayı unutma
     } stack;
 } cd3d11;
 
-int cd3d11_open(void *hwnd, int w, int h, cd3d11 *d3d);             // *_open.c
-void cd3d11_close(cd3d11 *d3d);                                     // *_close.c
-void cd3d11_viewport(cd3d11 *d3d, int w, int h);                    // *_rs.c
-void cd3d11_topology(cd3d11 *d3d, D3D_PRIMITIVE_TOPOLOGY topology); // *_ia.c
-void cd3d11_draw(cd3d11 *d3d, int vertex_count, int base_vertex);   // *_cmd.c
-void cd3d11_present(cd3d11 *d3d, int sync_interval);                // *_cmd.c
-void cd3d11_clear_default(cd3d11 *d3d);                             // *_cmd.c
+int cd3d11_open(void *hwnd, int w, int h, cd3d11 *d3d); // *_open.c
+void cd3d11_close(cd3d11 *d3d);                         // *_close.c
+void cd3d11_rs_viewport(cd3d11 *d3d, int w, int h);              // *_rs.c
+void cd3d11_rs_state(cd3d11 *d3d, void *rasterstate);            // *_rs.c
+void cd3d11_rs_scissor(cd3d11 *d3d, int l, int u, int r, int b); // *_rs.c
 
-void cd3d11_release_managed(cd3d11 *d3d);                                                         // *_objlife.c
+void cd3d11_topology(cd3d11 *d3d, D3D_PRIMITIVE_TOPOLOGY topology); // *_ia.c
+// vertex, index, layout ???
+
+void cd3d11_cmd_draw(cd3d11 *d3d, int vertex_count, int base_vertex);                                         // *_cmd.c
+void cd3d11_cmd_drawindexed(cd3d11 *d3d, int index_count, int base_index, int base_vertex);                   // *_cmd.c
+void cd3d11_cmd_drawinstanced(cd3d11 *d3d, int inst_v_count, int inst_count, int base_vertex, int base_inst); // *_cmd.c
+void cd3d11_cmd_dispatch(cd3d11 *d3d, int x, int y, int z);                                                   // *_cmd.c
+void cd3d11_cmd_present(cd3d11 *d3d, int sync_interval);                                                      // *_cmd.c
+void cd3d11_cmd_clear_default(cd3d11 *d3d);                                                                   // *_cmd.c
+
+//TODO: void cd3d11_use_managed_memory(int bEnable);
+//TODO: void cd3d11_switch_managed_memory(int page);
+void cd3d11_release_managed_memory(cd3d11 *d3d);                                                  // *_objlife.c
 void *cd3d11_new_shader_m(cd3d11 *d3d, const void *data, long long size, shader_stage_t stage);   // *_objlife.c
 void *cd3d11_new_cbuffer_m(cd3d11 *d3d, void *data, int size, int is_mut);                        // *_objlife.c
 void *cd3d11_new_buffer_m(cd3d11 *d3d, void *data, int size, int stride, int is_mut, int is_raw); // *_objlife.c

@@ -2,7 +2,7 @@
 #include "cd3d11.h"
 #include <stdio.h>
 
-void cd3d11_release_managed(cd3d11 *d3d) {
+void cd3d11_release_managed_memory(cd3d11 *d3d) {
     for (int i = 0; i < STACK_MEMORY_MAX; i++) {
         cd3d11__safe_release_obj(d3d->stack.cell[i].ptr);
     }
