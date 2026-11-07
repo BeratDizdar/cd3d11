@@ -37,7 +37,6 @@ typedef struct _cd3d11 {
     struct _managed_memory {
         void *ptr[STACK_MEMORY_MAX];
         int top;
-        int active; // bunu kullanmayı unutma
     } stack;
 } cd3d11;
 
@@ -47,7 +46,7 @@ void cd3d11_rs_viewport(cd3d11 *d3d, int w, int h);              // *_rs.c
 void cd3d11_rs_state(cd3d11 *d3d, void *rasterstate);            // *_rs.c
 void cd3d11_rs_scissor(cd3d11 *d3d, int l, int u, int r, int b); // *_rs.c
 
-// void cd3d11_memcpy();
+void cd3d11_memcpy(cd3d11 *d3d, void *obj, void *data, long long size, int discard); // *_util.c
 
 void cd3d11_topology(cd3d11 *d3d, D3D_PRIMITIVE_TOPOLOGY topology); // *_ia.c
 // vertex, index, layout ???
@@ -70,6 +69,7 @@ void *cd3d11_new_rasterstate_m(cd3d11 *d3d, int bSolid, D3D11_CULL_MODE cull, in
 //TODO: void *cd3d11_new_depthstencilstate_m(cd3d11 *d3d);
 
 void *cd3d11_get_srv_from_buffer_m(cd3d11 *d3d, void *buffer, int element_count, int is_raw); // *_view.c
+void *cd3d11_get_srv_from_tex2d_m(cd3d11 *d3d, void *tex);                                    // *_view.c
 
 void cd3d11_bind_shader(cd3d11 *d3d, void *shader, shader_stage_t stage);                           // *_bind.c
 void cd3d11_bind_reg(cd3d11 *d3d, void *ptr, shader_reg_t reg, int slot, shader_stage_t stage_bit); // *_bind.c

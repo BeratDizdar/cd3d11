@@ -15,7 +15,7 @@ void *cd3d11_new_shader_m(cd3d11 *d3d, const void *data, long long size, shader_
     else if (stage & STAGE_PIXEL) d3d->device->lpVtbl->CreatePixelShader(d3d->device, data, size, NULL, (ID3D11PixelShader**)&shader);
     else if (stage & STAGE_COMPUTE) d3d->device->lpVtbl->CreateComputeShader(d3d->device, data, size, NULL, (ID3D11ComputeShader**)&shader);
     else fprintf(stderr, "[CD3D11]: Unknown stage (%d)\n", stage);
-    cd3d11__push_stack(d3d, shader, 0);
+    cd3d11__push_stack(d3d, shader);
     return (void*)shader;
 }
 
@@ -28,7 +28,7 @@ void *cd3d11_new_cbuffer_m(cd3d11 *d3d, void *data, int size, int is_mut) {
     D3D11_SUBRESOURCE_DATA srd = {.pSysMem = data};
     ID3D11Buffer *cb = NULL;
     d3d->device->lpVtbl->CreateBuffer(d3d->device, &bd, &srd, &cb);
-    cd3d11__push_stack(d3d, cb, (is_mut) ? 1 : 0);
+    cd3d11__push_stack(d3d, cb);
     return (void*)cb;
 }
 
@@ -43,7 +43,7 @@ void *cd3d11_new_buffer_m(cd3d11 *d3d, void *data, int size, int stride, int is_
     D3D11_SUBRESOURCE_DATA srd = {.pSysMem = data};
     ID3D11Buffer *b = NULL;
     d3d->device->lpVtbl->CreateBuffer(d3d->device, &bd, &srd, &b);
-    cd3d11__push_stack(d3d, b, (is_mut) ? 1 : 0);
+    cd3d11__push_stack(d3d, b);
     return (void*)b;
 }
 
@@ -52,7 +52,7 @@ void *cd3d11_new_sampler_m(cd3d11 *d3d, int is_linear) {
     sd.Filter = (is_linear) ? D3D11_FILTER_MIN_MAG_MIP_LINEAR : D3D11_FILTER_MIN_MAG_MIP_POINT;
     ID3D11SamplerState *s = NULL;
     d3d->device->lpVtbl->CreateSamplerState(d3d->device, &sd, &s);
-    cd3d11__push_stack(d3d, s, 0);
+    cd3d11__push_stack(d3d, s);
     return (void*)s;
 }
 
@@ -76,7 +76,7 @@ void *cd3d11_new_tex2d_m(cd3d11 *d3d, const void *data, int w, int h, int pitch,
     srd.SysMemSlicePitch = 0;
     ID3D11Texture2D *t = NULL;
     d3d->device->lpVtbl->CreateTexture2D(d3d->device, &td, (data ? &srd : NULL), &t);
-    cd3d11__push_stack(d3d, t, (is_mut) ? 1 : 0);
+    cd3d11__push_stack(d3d, t);
     return (void*)t;
 }
 
@@ -87,7 +87,7 @@ void *cd3d11_new_rasterstate_m(cd3d11 *d3d, int bSolid, D3D11_CULL_MODE cull, in
     rd.FrontCounterClockwise = (bCcw) ? 1 : 0;
     ID3D11RasterizerState *rs = NULL;
     d3d->device->lpVtbl->CreateRasterizerState(d3d->device, &rd, &rs);
-    cd3d11__push_stack(d3d, rs, 0);
+    cd3d11__push_stack(d3d, rs);
     return (void*)rs;
 }
 
