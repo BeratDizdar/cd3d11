@@ -8,5 +8,5 @@ static inline void cd3d11__safe_release_obj(void *o) {
 static inline void cd3d11__push_stack(cd3d11 *d3d, void *obj, int is_mut) {
     if (d3d->stack.top >= STACK_MEMORY_MAX) return;
 
-    d3d->stack.cell[d3d->stack.top++].ptr = obj;
+    d3d->stack.ptr[d3d->stack.top++] = obj;
 }

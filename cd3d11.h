@@ -9,7 +9,7 @@
 - dinamik r/w işi
 */
 
-#define STACK_MEMORY_MAX 64
+#define STACK_MEMORY_MAX 256
 
 typedef enum {
     REG_B = 1 << 1,
@@ -30,15 +30,12 @@ typedef struct _cd3d11 {
     ID3D11Device           *device;
     ID3D11DeviceContext    *context;
     ID3D11RenderTargetView *default_rtv;
-    struct {
+    struct _debug_queries {
         ID3D11Query *time0;
         ID3D11Query *time1;
     } debug;
     struct _managed_memory {
-        struct {
-            void *ptr;
-            int is_mutable; // bunu kullanmayı unutma
-        } cell[STACK_MEMORY_MAX];
+        void *ptr[STACK_MEMORY_MAX];
         int top;
         int active; // bunu kullanmayı unutma
     } stack;
@@ -50,6 +47,8 @@ void cd3d11_rs_viewport(cd3d11 *d3d, int w, int h);              // *_rs.c
 void cd3d11_rs_state(cd3d11 *d3d, void *rasterstate);            // *_rs.c
 void cd3d11_rs_scissor(cd3d11 *d3d, int l, int u, int r, int b); // *_rs.c
 
+// void cd3d11_memcpy();
+
 void cd3d11_topology(cd3d11 *d3d, D3D_PRIMITIVE_TOPOLOGY topology); // *_ia.c
 // vertex, index, layout ???
 
@@ -60,8 +59,6 @@ void cd3d11_cmd_dispatch(cd3d11 *d3d, int x, int y, int z);                     
 void cd3d11_cmd_present(cd3d11 *d3d, int sync_interval);                                                      // *_cmd.c
 void cd3d11_cmd_clear_default(cd3d11 *d3d);                                                                   // *_cmd.c
 
-//TODO: void cd3d11_use_managed_memory(int bEnable);
-//TODO: void cd3d11_switch_managed_memory(int page);
 void cd3d11_release_managed_memory(cd3d11 *d3d);                                                  // *_objlife.c
 void *cd3d11_new_shader_m(cd3d11 *d3d, const void *data, long long size, shader_stage_t stage);   // *_objlife.c
 void *cd3d11_new_cbuffer_m(cd3d11 *d3d, void *data, int size, int is_mut);                        // *_objlife.c
