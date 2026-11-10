@@ -7,7 +7,7 @@
 
 // *_open.c
 
-int *d11_open(void *hwnd, int w, int h);
+void *d11_open(void *hwnd, int w, int h);
 void d11_make(void *d11_ptr);
 void d11_close(void *d11_ptr);
 

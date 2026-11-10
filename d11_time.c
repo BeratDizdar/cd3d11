@@ -1,10 +1,8 @@
-#include "d11_internal.h"
-
-void d11_time_start() {
+__declspec(dllexport) void d11_time_start() {
     _d->ctx->lpVtbl->End(_d->ctx, (ID3D11Asynchronous*)_d->t0);
 }
 
-unsigned long long d11_time_elapsed() {
+__declspec(dllexport) unsigned long long d11_time_elapsed() {
     _d->ctx->lpVtbl->End(_d->ctx, (ID3D11Asynchronous*)_d->t1);
     unsigned long long ts_begin = 0;
     unsigned long long ts_end   = 0;

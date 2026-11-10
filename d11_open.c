@@ -1,12 +1,14 @@
-#include "d11_internal.h"
-
 typedef HRESULT (__stdcall *PFN_D3D11Init)(void*, int, void*, UINT, const void*, UINT, UINT, const void*, IDXGISwapChain**, ID3D11Device**, void*, ID3D11DeviceContext**);
 
-int *d11_open(void *hwnd, int w, int h) {
-    d11 *p = malloc(sizeof(d11));
+__declspec(dllexport) void *d11_open(void *hwnd, int w, int h) {
+    d11 *p = calloc(1, sizeof(d11));
 
     p->lib = LoadLibraryA("d3d11.dll");
     PFN_D3D11Init D3D11Init = (PFN_D3D11Init)GetProcAddress(p->lib, "D3D11CreateDeviceAndSwapChain");
+    if (!D3D11Init) {
+        fprintf(stderr, "[D11]: where is library!\n");
+        return NULL;
+    }
 
     DXGI_SWAP_CHAIN_DESC sD = {0};
     sD.BufferCount = 1;
@@ -23,7 +25,7 @@ int *d11_open(void *hwnd, int w, int h) {
     D3D_FEATURE_LEVEL fReq = D3D_FEATURE_LEVEL_11_0;
     D3D_FEATURE_LEVEL fSup;
     if (D3D11Init(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &fReq, 1, D3D11_SDK_VERSION, &sD, &p->swp, &p->dev, &fSup, &p->ctx) != S_OK) {
-        fprintf(stderr, "[CD3D11]: Device creation failed!\n");
+        fprintf(stderr, "[D11]: device creation failed!\n");
         return NULL;
     }
 
@@ -49,17 +51,35 @@ int *d11_open(void *hwnd, int w, int h) {
     return (void*)p;
 }
 
-void d11_make(void *d11_ptr) {
+__declspec(dllexport) void d11_make(void *d11_ptr) {
     if (d11_ptr) _d = (d11*)d11_ptr;
 }
 
-void d11_close(void *d11_ptr) {
+__declspec(dllexport) void d11_close(void *d11_ptr) {
     d11 *p = (d11*)d11_ptr;
+    if (!p) return;
+    for (int i = 0; i < D11_MAX_SHADER_SLOT; i++) {
+        d11__release_if_exists(p->vs[i]);
+        d11__release_if_exists(p->ps[i]);
+    }
+    for (int i = 0; i < D3D11_COMMONSHADER_INPUT_RESOURCE_REGISTER_COUNT; i++) {
+        d11__release_if_exists(p->resource[i]);
+        d11__release_if_exists(p->reg_t[i]);
+    }
+    for (int i = 0; i < D3D11_COMMONSHADER_CONSTANT_BUFFER_REGISTER_COUNT; i++) {
+        d11__release_if_exists(p->reg_b[i]);
+    }
+    for (int i = 0; i < D3D11_COMMONSHADER_SAMPLER_REGISTER_COUNT; i++) {
+        d11__release_if_exists(p->reg_s[i]);
+    }
+
     d11__release_if_exists(p->t0);
     d11__release_if_exists(p->t1);
     d11__release_if_exists(p->rtv0);
+    d11__release_if_exists(p->dsv0);
     d11__release_if_exists(p->ctx);
     d11__release_if_exists(p->dev);
     d11__release_if_exists(p->swp);
-    free(p->lib);
+    if (p->lib) FreeLibrary((HMODULE)p->lib);
+    free(p);
 }

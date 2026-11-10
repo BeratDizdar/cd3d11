@@ -27,6 +27,5 @@ typedef struct _d11 {
     ID3D11ShaderResourceView *reg_t[D3D11_COMMONSHADER_INPUT_RESOURCE_REGISTER_COUNT];
     ID3D11SamplerState       *reg_s[D3D11_COMMONSHADER_SAMPLER_REGISTER_COUNT];
 } d11;
-extern d11 *_d;
 
 void d11__release_if_exists(void *obj);

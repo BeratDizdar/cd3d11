@@ -1,6 +1,4 @@
-#include "d11_internal.h"
-
-void d11_new_cbuffer(int _Slot, const void *_Data, long long _Size) {
+__declspec(dllexport) void d11_new_cbuffer(int _Slot, const void *_Data, long long _Size) {
     if (_Slot < 0 || _Slot >= D3D11_COMMONSHADER_CONSTANT_BUFFER_REGISTER_COUNT) {
         fprintf(stderr, "[D11]: invalid constant buffer register (%d)\n", _Slot);
         return;
@@ -20,7 +18,7 @@ void d11_new_cbuffer(int _Slot, const void *_Data, long long _Size) {
     _d->ctx->lpVtbl->PSSetConstantBuffers(_d->ctx, _Slot, 1, &_d->reg_b[_Slot]);
 }
 
-void d11_new_structured_buffer(int _Slot, const void *_Data, long long _Size, int _Stride) {
+__declspec(dllexport) void d11_new_structured_buffer(int _Slot, const void *_Data, long long _Size, int _Stride) {
     if (_Slot < 0 || _Slot >= D3D11_COMMONSHADER_INPUT_RESOURCE_REGISTER_COUNT) {
         fprintf(stderr, "[D11]: invalid input resource register (%d)\n", _Slot);
         return;
@@ -50,7 +48,7 @@ void d11_new_structured_buffer(int _Slot, const void *_Data, long long _Size, in
     _d->ctx->lpVtbl->PSSetShaderResources(_d->ctx, _Slot, 1, &_d->reg_t[_Slot]);
 }
 
-void d11_new_byte_address_buffer(int _Slot, const void *_Data, long long _Size) {
+__declspec(dllexport) void d11_new_byte_address_buffer(int _Slot, const void *_Data, long long _Size) {
     if (_Slot < 0 || _Slot >= D3D11_COMMONSHADER_INPUT_RESOURCE_REGISTER_COUNT) {
         fprintf(stderr, "[D11]: invalid input resource register (%d)\n", _Slot);
         return;
@@ -80,7 +78,7 @@ void d11_new_byte_address_buffer(int _Slot, const void *_Data, long long _Size) 
     _d->ctx->lpVtbl->PSSetShaderResources(_d->ctx, _Slot, 1, &_d->reg_t[_Slot]);
 }
 
-void d11_new_texture2d(int _Slot, const void *_Data, int _Width, int _Height) {
+__declspec(dllexport) void d11_new_texture2d(int _Slot, const void *_Data, int _Width, int _Height) {
     if (_Slot < 0 || _Slot >= D3D11_COMMONSHADER_INPUT_RESOURCE_REGISTER_COUNT) {
         fprintf(stderr, "[D11]: invalid input resource register (%d)\n", _Slot);
         return;
@@ -119,7 +117,7 @@ void d11_new_texture2d(int _Slot, const void *_Data, int _Width, int _Height) {
     _d->ctx->lpVtbl->PSSetShaderResources(_d->ctx, _Slot, 1, &_d->reg_t[_Slot]);
 }
 
-void d11_new_sampler(int _Slot, int _IsLinear) {
+__declspec(dllexport) void d11_new_sampler(int _Slot, int _IsLinear) {
     if (_Slot < 0 || _Slot >= D3D11_COMMONSHADER_SAMPLER_REGISTER_COUNT) {
         fprintf(stderr, "[D11]: invalid sampler register (%d)\n", _Slot);
         return;
@@ -134,13 +132,13 @@ void d11_new_sampler(int _Slot, int _IsLinear) {
     sd.ComparisonFunc = D3D11_COMPARISON_NEVER;
     sd.MinLOD         = 0;
     sd.MaxLOD         = D3D11_FLOAT32_MAX;
-    _d->dev->lpVtbl->CreateSamplerState(_d->dev, &sd, (ID3D11SamplerState**)&_d->resource[_Slot]);
+    _d->dev->lpVtbl->CreateSamplerState(_d->dev, &sd, (ID3D11SamplerState**)&_d->reg_s[_Slot]);
     
     _d->ctx->lpVtbl->VSSetSamplers(_d->ctx, _Slot, 1, &_d->reg_s[_Slot]);
     _d->ctx->lpVtbl->PSSetSamplers(_d->ctx, _Slot, 1, &_d->reg_s[_Slot]);
 }
 
-void d11_new_shader(int _Slot, const void *_Data, long long _Size) {
+__declspec(dllexport) void d11_new_shader(int _Slot, const void *_Data, long long _Size) {
     if (_Slot < 0 || _Slot >= D11_MAX_SHADER_SLOT) {
         fprintf(stderr, "[D11]: invalid shader slot (%d)\n", _Slot);
         return;
