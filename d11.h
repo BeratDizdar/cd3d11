@@ -23,6 +23,7 @@ void d11_new_structured_buffer(int _Slot, const void *_Data, long long _Size, in
 void d11_new_byte_address_buffer(int _Slot, const void *_Data, long long _Size);
 void d11_new_texture2d(int _Slot, const void *_Data, int _Width, int _Height);
 void d11_new_sampler(int _Slot, int _IsLinear);
+void d11_new_shader(int _Slot, const void *_VData, long long _VSize, const void *_PData, long long _PSize);
 
 // *_pipeline.c
 
