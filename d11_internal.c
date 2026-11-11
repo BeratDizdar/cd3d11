@@ -88,7 +88,7 @@ __declspec(dllexport) void d11_new_shader(int _Slot, const void *_VData, long lo
     d11__release_if_exists(_d->ps[_Slot]);
 
     ID3D11VertexShader **v = (ID3D11VertexShader**)&_d->vs[_Slot];
-    ID3D11PixelShader **p = (ID3D11PixelShader**)&_d->vs[_Slot];
+    ID3D11PixelShader **p = (ID3D11PixelShader**)&_d->ps[_Slot];
 
     _d->result = _d->dev->lpVtbl->CreateVertexShader(_d->dev, _VData, _VSize, NULL, v);
     d11__check_result(_d->result, "[D11]: Vertex shader created\n");
