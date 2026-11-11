@@ -137,15 +137,3 @@ __declspec(dllexport) void d11_new_sampler(int _Slot, int _IsLinear) {
     _d->ctx->lpVtbl->VSSetSamplers(_d->ctx, _Slot, 1, &_d->reg_s[_Slot]);
     _d->ctx->lpVtbl->PSSetSamplers(_d->ctx, _Slot, 1, &_d->reg_s[_Slot]);
 }
-
-__declspec(dllexport) void d11_new_shader(int _Slot, const void *_VData, long long _VSize, const void *_PData, long long _PSize) {
-    if (_Slot < 0 || _Slot >= D11_MAX_SHADER_SLOT) {
-        fprintf(stderr, "[D11]: invalid shader slot (%d)\n", _Slot);
-        return;
-    }
-    d11__release_if_exists(_d->vs[_Slot]);
-    d11__release_if_exists(_d->ps[_Slot]);
-
-    _d->dev->lpVtbl->CreateVertexShader(_d->dev, _VData, _VSize, NULL, (ID3D11VertexShader**)&_d->vs[_Slot]);
-    _d->dev->lpVtbl->CreatePixelShader(_d->dev, _PData, _PSize, NULL, (ID3D11PixelShader**)&_d->ps[_Slot]);
-}

@@ -9,6 +9,8 @@
 
 typedef struct _d11 {
     void                   *lib;
+    HRESULT              result;
+
     IDXGISwapChain         *swp;
     ID3D11Device           *dev;
     ID3D11DeviceContext    *ctx;
@@ -29,3 +31,4 @@ typedef struct _d11 {
 } d11;
 
 void d11__release_if_exists(void *obj);
+void d11__check_result(long code, const char *ok_msg);
